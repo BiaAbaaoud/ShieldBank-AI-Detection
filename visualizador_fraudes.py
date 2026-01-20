@@ -54,4 +54,4 @@ def gerar_grafico_premium():
     plt.show()
 
 if __name__ == "__main__":
-    gerar_grafico_premium()
+    gerar_grafico_premium()README.md.txt

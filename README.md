@@ -1,52 +1,53 @@
-# ShieldBank-AI: Detecção de Fraudes com Machine Learning 🛡️💰
+# 🛡️ ShieldBank-SQL-Intelligence
 
-Bem-vindo ao **ShieldBank-AI**. Este projeto foi desenvolvido para demonstrar a aplicação de Inteligência Artificial na segurança bancária, especificamente na identificação de transações suspeitas de fraude em cartões de crédito utilizando padrões comportamentais.
+![Status do Projeto](https://img.shields.io/badge/Status-Conclu%C3%ADdo-brightgreen)
+![Linguagem](https://img.shields.io/badge/Python-3.x-blue)
+![Database](https://img.shields.io/badge/SQL-SQLite-lightgrey)
+
+## 📌 O que é?
+O **ShieldBank-SQL-Intelligence** é um ecossistema de análise de crédito focado em segurança financeira. Ele simula o backend de um banco digital, integrando a robustez de um banco de dados relacional (SQL) com a capacidade analítica da Inteligência Artificial (Machine Learning) para detectar anomalias comportamentais.
 
 ## 🎯 Objetivo do Projeto
-O objetivo é ir além das regras estáticas (Ex: "bloquear tudo acima de R$ 5.000"). O ShieldBank-AI utiliza o algoritmo **Isolation Forest** para detetar anomalias estatísticas, aprendendo o que é o comportamento "normal" do utilizador e isolando o que é atípico, como compras em horários de madrugada ou locais não habituais.
+O objetivo principal é demonstrar como o **SQL** atua como a "espinha dorsal" para projetos de IA. O sistema identifica perfis de risco não apenas por valores estáticos, mas cruzando dados complexos de renda versus histórico de gastos, filtrando o que é um comportamento padrão de quem é um potencial fraudador.
 
-## 🛠️ Ferramentas e Tecnologias (Stack)
-O projeto foi construído 100% em **Python**, utilizando as bibliotecas líderes do setor financeiro e de dados:
-* **Python (Core):** Lógica e integração.
-* **Pandas:** Para manipulação de dados e limpeza do histórico bancário.
-* **Scikit-Learn:** Para a implementação da Inteligência Artificial (Isolation Forest).
-* **Matplotlib / Seaborn:** Para a criação do dashboard visual moderno.
-* **NumPy:** Para geração e processamento de dados numéricos.
+## 🛠️ Ferramentas Utilizadas
+* **Python**: Linguagem core para lógica e automação.
+* **SQL (SQLite)**: Gerenciamento de dados relacionais e modelagem de tabelas.
+* **Pandas**: Manipulação e limpeza de dados extraídos via SQL.
+* **Scikit-Learn**: Implementação do algoritmo de IA *Isolation Forest*.
+* **Matplotlib & Seaborn**: Geração de dashboards e gráficos de dispersão estatística.
 
-## 🗂️ Estrutura dos Documentos
-* `gerador_transacoes.py`: Cria o cenário bancário com 1.000 transações e insere fraudes camufladas.
-* `detector_fraudes.py`: O núcleo de IA que processa, normaliza e identifica os suspeitos.
-* `visualizador_fraudes.py`: Gera o gráfico profissional com a separação entre transações seguras e alertas.
-* `transacoes_bancarias.csv`: Base de dados gerada para o teste.
-* `relatorio_fraudes.csv`: O veredito final da IA com o rótulo de cada transação.
+## 📂 Documentação dos Arquivos
+Cada documento no repositório representa uma camada da arquitetura do projeto:
 
-## 🧠 Como funciona o Isolation Forest?
-Diferente de modelos que aprendem o que é "correto", este algoritmo foca em **isolar** as anomalias. Como as fraudes são raras e diferentes, elas são mais fáceis de separar matematicamente. O modelo cria "florestas" de decisão; as transações que atingem um isolamento mais rápido (poucas divisões na árvore) são marcadas como suspeitas.
-
-
+1.  **`sistema_credito_sql.py`**: Script de infraestrutura que cria o banco de dados e as tabelas usando comandos DDL (Data Definition Language).
+2.  **`shieldbank_credito.db`**: O banco de dados SQLite gerado, contendo as tabelas de Clientes e Histórico de Pagamentos.
+3.  **`detectar_fraude.py`**: Primeira versão da IA focada em análise unidimensional (Outliers de Renda).
+4.  **`shieldbank_ia_v2.py`**: O "cérebro" do projeto. Realiza **SQL Joins** complexos para unir tabelas e treinar a IA com múltiplas variáveis comportamentais.
+5.  **`grafico_fraude.py`**: Ferramenta de visualização que gera o mapa de anomalias com linhas de tendência e identificação de suspeitos.
 
 ---
 
 ## ❓ FAQ - Perguntas Frequentes
 
-**1. Por que não usar apenas regras simples de "IF/ELSE"?**
-Regras manuais são fáceis de prever e difíceis de manter. O ShieldBank-AI consegue cruzar Valor + Hora + Local simultaneamente para encontrar padrões complexos que uma regra estática ignoraria.
+**1. Por que usar SQL em vez de apenas arquivos CSV para a IA?**
+O SQL garante a integridade dos dados e permite realizar consultas complexas (Joins) e agregações diretamente na fonte, o que é essencial para escalabilidade em bancos reais.
 
-**2. O que são os pontos vermelhos misturados aos azuis no gráfico?**
-São os **Falsos Positivos**. O algoritmo indica que aquela transação, embora possa ser legítima, está entre os 1% mais "estranhos" do conjunto. Num banco real, isto serve para alertar o sistema de prevenção sem necessariamente bloquear o cliente de imediato.
+**2. Qual a função do algoritmo Isolation Forest neste projeto?**
+Ele atua isolando observações que são significativamente diferentes da massa de dados. No ShieldBank, ele identifica clientes que possuem uma relação "Renda x Gasto" desproporcional à tendência do grupo.
 
-**3. Para que serve a normalização (StandardScaler)?**
-Serve para que a escala do "Valor" (R$ 5.000) não domine a escala da "Hora" (0-23h). A normalização garante que todos os dados contribuam com o mesmo peso estatístico para a IA.
+**3. O que define um cliente como "🚩 ALERTA" no sistema?**
+Não é apenas ter renda alta ou baixa, mas sim o distanciamento da linha de tendência esperada. Se o gasto médio foge muito do padrão previsto para aquela faixa de renda, o sistema aciona o alerta.
 
-**4. O modelo deteta fraudes de valor baixo?**
-Sim! Se o horário e o local forem atípicos para o padrão do cliente, mesmo uma compra de valor reduzido será isolada como suspeita.
+**4. Como o SQL contribuiu para a precisão da IA 2.0?**
+Através de um comando `GROUP BY` e `AVG()`, conseguimos extrair o comportamento histórico de cada cliente. Sem essa agregação via SQL, a IA olharia apenas para dados isolados e não para o comportamento acumulado.
 
-**5. O que define a sensibilidade do sistema?**
-O parâmetro `contamination`. No projeto usamos 1% (0.01). Ao aumentar este valor, o banco torna-se mais rigoroso, capturando mais fraudes mas aumentando o número de alertas falsos.
+**5. O sistema detecta apenas fraudes de gastos excessivos?**
+Não. Ele também detecta "anomalias de subutilização" ou inconsistências cadastrais, como clientes de altíssima renda com gastos quase nulos, o que pode indicar contas inativas ou erros de sistema.
 
-**6. Como este sistema escala para milhões de dados?**
-O algoritmo Isolation Forest possui uma complexidade linear, o que o torna extremamente eficiente e rápido para processar volumes massivos de transações em tempo real.
+**6. É possível escalar este projeto para milhões de dados?**
+Sim. Como a estrutura é baseada em SQL, bastaria trocar o motor SQLite por um PostgreSQL ou SQL Server para suportar volumes massivos de transações mantendo a mesma lógica analítica.
 
 ---
 
-**Desenvolvedora:** [BiaAbaaoud](https://github.com/BiaAbaaoud)
+**Desenvolvedora:** BiaAbaaoud
